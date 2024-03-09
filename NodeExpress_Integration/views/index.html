@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form onsubmit="addTodo(event)">
+      <br />
+      <input
+        type="text"
+        name="text"
+        id="text"
+        placeholder="Description"
+      /><br /><br />
+      <button id="add-button" type="submit">Add</button>
+    </form>
+    <br />
+    <hr />
+    <br />
+    <form onsubmit="DELETE(event)">
+      <input
+        type="text"
+        name="todel"
+        id="todel"
+        placeholder="ID to Delete"
+      /><br /><br />
+      <button type="submit">Delete</button>
+    </form>
+
+    <br />
+    <hr />
+    <br />
+    <form onsubmit="EDIT(event)" id="edit-form">
+      <input
+        type="text"
+        id="edit_id"
+        name="edit_id"
+        placeholder="ID to Edit"
+      /><br /><br />
+      <input
+        type="text"
+        name="new_text"
+        id="new_text"
+        placeholder="new Description"
+      />
+      <br><br>
+      <button type="submit" id="edit-button">Edit</button>
+    </form>
+    <br /><br />
+
+    <script>
+      function addTodo(event) {
+        event.preventDefault();
+        fetch("http://localhost:5000/todo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Specify the content type as JSON
+            // Add any other headers as needed
+          },
+          body: JSON.stringify({
+            text: event.target.text.value,
+          }),
+        })
+          .then((res) => {
+            // console.log(res)
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+          });
+      }
+
+      function DELETE(event) {
+        event.preventDefault();
+        const todel = event.target.todel.value;
+
+        fetch(`http://localhost:5000/deleteTodo/${todel}`, {
+          method: "POST",
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+          });
+      }
+
+      function EDIT(event) {
+        event.preventDefault();
+        const id = event.target.edit_id.value;
+        const new_text = event.target.new_text.value;
+
+        fetch(`http://localhost:5000/edit/${id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: new Date().toISOString(),
+            text: new_text,
+          }),
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+  </body>
+</html>
