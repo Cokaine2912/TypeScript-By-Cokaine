@@ -27,8 +27,10 @@ router.post("/deleteTodo/:id", (req, res, next) => {
     return res.status(200).json(todos);
 });
 router.post("/edit/:id", (req, res, next) => {
-    const toeditId = req.params.id;
-    const new_obj = req.body;
+    const body = req.body;
+    const Req = req.params;
+    const toeditId = Req.id;
+    const new_obj = body;
     const toeditObjectIndex = todos.findIndex(obj => obj.id === toeditId);
     if (toeditObjectIndex >= 0 && toeditObjectIndex < todos.length) {
         todos[toeditObjectIndex] = new_obj;
